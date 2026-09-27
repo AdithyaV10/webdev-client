@@ -10,8 +10,13 @@ export default function AnchorTag() {
       to get dummy text.
       <br />
 
-      <a href="https://github.com/jannunzi" id="wd-github">
-        GitHub
+      <a
+        href="https://github.com/AdithyaV10/webdev-client"
+        id="wd-github"
+        target="_blank"
+        rel="noreferrer"
+      >
+        GitHub Repository
       </a>
 
       <h5>My links</h5>
