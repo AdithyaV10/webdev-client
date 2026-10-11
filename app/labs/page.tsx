@@ -5,6 +5,18 @@ export default function Labs() {
     <div id="wd-labs">
       <h1>Labs</h1>
 
+      <p>Adithya Varadarajan</p>
+      <p>
+        <a
+          href="https://github.com/AdithyaV10/webdev-client"
+          id="wd-github"
+          target="_blank"
+          rel="noreferrer"
+        >
+          GitHub Repository
+        </a>
+      </p>
+
       <ul>
         <li>
           <Link href="/labs/lab1">

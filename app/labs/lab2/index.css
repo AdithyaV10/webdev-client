@@ -1,0 +1,115 @@
+/* Every active selector stays inside Lab 2, even after client navigation. */
+
+/* Temporary tag sample from section 2.1.2, disabled for the ID exercises:
+#wd-lab2 p {
+  background-color: green;
+  color: white;
+}
+*/
+
+#wd-lab2 p#wd-css-import-example {
+  background-color: green;
+  color: white;
+}
+
+/* Additional tag-selector exercises: existing headings need no extra class. */
+#wd-lab2 > section h3 {
+  background-color: teal;
+  color: white;
+}
+
+#wd-lab2 > h2 {
+  background-color: navy;
+  color: white;
+}
+
+#wd-lab2 p#wd-id-selector-1 {
+  background-color: red;
+  color: white;
+}
+
+#wd-lab2 p#wd-id-selector-2 {
+  background-color: yellow;
+  color: black;
+}
+
+#wd-lab2 p#wd-id-selector-3 {
+  background-color: darkgreen;
+  color: white;
+}
+
+#wd-lab2 p#wd-ai-id-selector {
+  background-color: orange;
+  color: black;
+}
+
+#wd-lab2 .wd-class-selector {
+  background-color: yellow;
+  color: blue;
+}
+
+#wd-lab2 .wd-your-class {
+  background-color: darkblue;
+  color: white;
+}
+
+#wd-lab2 .wd-ai-class-selector {
+  background-color: lavender;
+  color: black;
+}
+
+#wd-lab2 .wd-selector-1 .wd-selector-3 {
+  background-color: red;
+  color: white;
+}
+
+#wd-lab2 .wd-selector-2 > .wd-selector-3 > .wd-selector-4 {
+  background-color: yellow;
+  color: blue;
+}
+
+#wd-lab2 .wd-selector-3 > .wd-your-selector-5 {
+  background-color: lightgreen;
+  color: black;
+}
+
+#wd-lab2 .wd-selector-1 .wd-ai-selector-5 {
+  background-color: navy;
+  color: white;
+}
+
+/* :where adds no specificity: the section boundary does not bias the test.
+   All contenders share #wd-lab2; an extra ID beats a class, which beats a tag. */
+#wd-lab2 :where(#wd-css-cascade) p {
+  background-color: green;
+  color: white;
+}
+
+#wd-lab2 .wd-your-cascade {
+  background-color: gold;
+}
+
+#wd-lab2 p#wd-your-cascade {
+  background-color: navy;
+}
+
+/* Equal specificity: this later lightgreen declaration wins over lightblue. */
+#wd-lab2 .wd-source-order {
+  background-color: lightblue;
+  color: black;
+}
+
+#wd-lab2 .wd-source-order {
+  background-color: lightgreen;
+}
+
+/* AI sample: the ID rule wins over the green tag and yellow class rules. */
+#wd-lab2 .wd-ai-cascade {
+  background-color: yellow;
+  color: black;
+}
+
+#wd-lab2 p#wd-ai-cascade {
+  background-color: red;
+  color: white;
+}
