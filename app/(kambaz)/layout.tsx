@@ -1,22 +1,6 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import KambazNavigation from "./Navigation";
-
-export default function KambazLayout({
-  children,
-}: Readonly<{ children: ReactNode }>) {
-  return (
-    <table>
-      <tbody>
-        <tr>
-          <td valign="top" width="200">
-            <KambazNavigation />
-          </td>
-
-          <td valign="top" width="100%">
-            {children}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  );
+import "./kambaz.css";
+export default function KambazLayout({ children }: Readonly<{ children: ReactNode }>) {
+  return <div id="wd-kambaz" className="flex min-h-screen font-sans"><KambazNavigation /><main className="wd-main-content-offset flex-1 p-3">{children}</main></div>;
 }
