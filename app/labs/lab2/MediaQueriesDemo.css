@@ -1,0 +1,45 @@
+#wd-lab2 .wd-media-queries-demo {
+  background-color: green;
+  color: white;
+  padding: 1rem;
+}
+
+/* :where keeps highlights and resets equally specific at shared edges. */
+#wd-lab2 .wd-media-queries-demo li {
+  opacity: 0.55;
+  font-weight: normal;
+  text-decoration: none;
+}
+#wd-lab2 .wd-media-queries-demo li:where(.wd-mq-rule-default) {
+  opacity: 1;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+@media (min-width: 750px) and (max-width: 1000px) {
+  #wd-lab2 .wd-media-queries-demo { background-color: yellow; color: black; }
+  #wd-lab2 .wd-media-queries-demo li { opacity: 0.55; font-weight: normal; text-decoration: none; }
+  #wd-lab2 .wd-media-queries-demo li:where(.wd-mq-rule-750) { opacity: 1; font-weight: bold; text-decoration: underline; }
+}
+@media (min-width: 1000px) and (max-width: 1250px) {
+  #wd-lab2 .wd-media-queries-demo { background-color: blue; color: white; }
+  #wd-lab2 .wd-media-queries-demo li { opacity: 0.55; font-weight: normal; text-decoration: none; }
+  #wd-lab2 .wd-media-queries-demo li:where(.wd-mq-rule-1000) { opacity: 1; font-weight: bold; text-decoration: underline; }
+}
+@media (min-width: 1250px) {
+  #wd-lab2 .wd-media-queries-demo { background-color: red; color: white; }
+  #wd-lab2 .wd-media-queries-demo li { opacity: 0.55; font-weight: normal; text-decoration: none; }
+  #wd-lab2 .wd-media-queries-demo li:where(.wd-mq-rule-1250) { opacity: 1; font-weight: bold; text-decoration: underline; }
+}
+/* On your own: an additional wide-screen breakpoint. */
+@media (min-width: 1500px) {
+  #wd-lab2 .wd-media-queries-demo { background-color: orange; color: black; }
+  #wd-lab2 .wd-media-queries-demo li { opacity: 0.55; font-weight: normal; text-decoration: none; }
+  #wd-lab2 .wd-media-queries-demo li:where(.wd-mq-rule-your) { opacity: 1; font-weight: bold; text-decoration: underline; }
+}
+/* With AI: a separate mobile example. */
+@media (max-width: 749px) {
+  #wd-lab2 .wd-media-queries-demo { background-color: purple; color: white; }
+  #wd-lab2 .wd-media-queries-demo li { opacity: 0.55; font-weight: normal; text-decoration: none; }
+  #wd-lab2 .wd-media-queries-demo li:where(.wd-mq-rule-ai) { opacity: 1; font-weight: bold; text-decoration: underline; }
+}
