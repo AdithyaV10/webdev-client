@@ -1,55 +1,61 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function TOC() {
+  const pathname = usePathname();
+  // Leaving full Tailwind must discard Preflight with a new document.
+  const NavigationLink = pathname === "/labs/lab2/tailwind" ? "a" : Link;
   return (
     <div>
       <ul>
         <li>
-          <Link href="/labs" id="wd-home-link">
+          <NavigationLink href="/labs" id="wd-home-link">
             Home
-          </Link>
+          </NavigationLink>
         </li>
 
         <li>
-          <Link href="/labs/lab1">
+          <NavigationLink href="/labs/lab1">
             Lab 1
-          </Link>
+          </NavigationLink>
         </li>
 
         <li>
-          <Link href="/labs/lab2">
+          <NavigationLink href="/labs/lab2">
             Lab 2
-          </Link>
+          </NavigationLink>
         </li>
 
         <li>
-          <Link href="/labs/lab3">
+          <NavigationLink href="/labs/lab3">
             Lab 3
-          </Link>
+          </NavigationLink>
         </li>
 
         <li>
-          <Link href="/labs/lab4">
+          <NavigationLink href="/labs/lab4">
             Lab 4
-          </Link>
+          </NavigationLink>
         </li>
 
         <li>
-          <Link href="/labs/lab5">
+          <NavigationLink href="/labs/lab5">
             Lab 5
-          </Link>
+          </NavigationLink>
         </li>
 
         <li>
-          <Link href="/" id="wd-kambaz-link">
+          <NavigationLink href="/" id="wd-kambaz-link">
             Kambaz
-          </Link>
+          </NavigationLink>
         </li>
 
         <li>
-          <Link href="/book/ch1" id="wd-toc-book-link">
+          <NavigationLink href="/book/ch1" id="wd-toc-book-link">
             Chapter 1
-          </Link>
+          </NavigationLink>
         </li>
       </ul>
 
