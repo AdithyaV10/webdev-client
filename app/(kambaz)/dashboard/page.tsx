@@ -20,7 +20,7 @@ export default function Dashboard() {
         <CourseCard
           id="1234"
           title="CS1234 React JS"
-          subtitle="Full Stack software developer — Adithya Varadarajan's web development course"
+          subtitle="Web development course by Adithya Varadarajan"
           image={<SiReact className="h-28 w-28" color="#61DAFB" aria-label="React logo" />}
         />
 
