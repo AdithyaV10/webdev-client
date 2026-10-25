@@ -1,4 +1,5 @@
 import CourseCard from "./CourseCard";
+import { courses } from "../database";
 import { SiReact, SiNodedotjs, SiMongodb } from "react-icons/si";
 
 export default function Dashboard() {
@@ -11,33 +12,19 @@ export default function Dashboard() {
       <hr />
 
       <h2 id="wd-dashboard-published" className="my-4 text-2xl font-semibold">
-        Published Courses (4)
+        Published Courses ({courses.length})
       </h2>
 
       <hr />
 
       <div id="wd-dashboard-courses" className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-        <CourseCard
-          id="1234"
-          title="CS1234 React JS"
-          subtitle="Web development course by Adithya Varadarajan"
-          image={<SiReact className="h-28 w-28" color="#61DAFB" aria-label="React logo" />}
-        />
-
-        <CourseCard
-          id="2345"
-          title="CS2345 Node JS"
-          subtitle="Server side JavaScript"
-          image={<SiNodedotjs className="h-28 w-28" color="#5FA04E" aria-label="Node.js logo" />}
-        />
-
-        <CourseCard
-          id="3456"
-          title="CS3456 MongoDB"
-          subtitle="NoSQL Databases"
-          image={<SiMongodb className="h-28 w-28" color="#47A248" aria-label="MongoDB logo" />}
-        />
-        <CourseCard id="CS9999" title="CS9999 Sample Course" subtitle="Assistant-generated sample — not my course" image="/images/teslabot.jpg" />
+        {courses.map(course => <CourseCard
+          key={course._id}
+          id={course._id}
+          title={course.name}
+          subtitle={course.description}
+          image={course.image === "/images/nodejs.jpg" ? <SiNodedotjs className="h-28 w-28" color="#5FA04E" aria-label="Node.js logo" /> : course.image === "/images/mongodb.jpg" ? <SiMongodb className="h-28 w-28" color="#47A248" aria-label="MongoDB logo" /> : <SiReact className="h-28 w-28" color="#61DAFB" aria-label="React logo" />}
+        />)}
       </div>
     </div>
   );

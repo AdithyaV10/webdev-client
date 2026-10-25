@@ -6,7 +6,7 @@ import AssignmentItem from "./AssignmentItem";
 import { parseAssignments, useAssignmentsSnapshot } from "./store";
 import { inputClass, primaryButton, secondaryButton } from "../../../UI";
 export default function AssignmentsClient({ cid }: { cid: string }) {
-  const rows = parseAssignments(useAssignmentsSnapshot(cid));
+  const rows = parseAssignments(useAssignmentsSnapshot(cid), cid);
   const [search, setSearch] = useState("");
   const [addingGroup, setAddingGroup] = useState(false);
   const [groupName, setGroupName] = useState("");
