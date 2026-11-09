@@ -1,0 +1,13 @@
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/utilities" layer(utilities);
+body > table:has(#wd-lab4-content) { width: 100%; table-layout: fixed; }
+body > table:has(#wd-lab4-content) > tbody > tr > td:first-child { width: 115px; overflow-wrap: anywhere; }
+#wd-lab4-content { min-width: 0; padding: 0 8px; font-family: Arial, sans-serif; }
+#wd-lab4-content, #wd-lab4-content * { box-sizing: border-box; }
+#wd-lab4-content input:not([type="checkbox"]):not([type="radio"]), #wd-lab4-content select, #wd-lab4-content textarea { min-width: 0; max-width: 100%; border: 1px solid #a3a3a3; border-radius: 4px; padding: 6px; }
+#wd-lab4-content button { cursor: pointer; border: 1px solid #a3a3a3; border-radius: 4px; padding: 5px 9px; margin: 3px; }
+#wd-lab4-content pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+#wd-lab4-content li, #wd-lab4-content label, #wd-lab4-content a { overflow-wrap: anywhere; }
+#wd-lab4-content li { flex-wrap: wrap; gap: 4px; }
+#wd-lab4-content hr { margin: 24px 0; }
+@media (max-width: 480px) { #wd-lab4-content .flex { flex-wrap: wrap; } }

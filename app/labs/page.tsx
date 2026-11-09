@@ -38,7 +38,7 @@ export default function Labs() {
 
         <li>
           <Link href="/labs/lab4" id="wd-lab4-link">
-            Lab 4
+            Lab 4: Client State
           </Link>
         </li>
 
