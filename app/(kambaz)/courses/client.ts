@@ -1,0 +1,12 @@
+import { http } from "../http";
+import type { Course } from "../store/coursesStore";
+import type { CourseModule } from "../store/modulesStore";
+export const fetchAllCourses = async (): Promise<Course[]> => (await http.get("/courses")).data;
+export const findMyCourses = async (): Promise<Course[]> => (await http.get("/users/current/courses")).data;
+export const createCourse = async (course: Course, signedIn: boolean): Promise<Course> => (await http.post(signedIn ? "/users/current/courses" : "/courses", course)).data;
+export const updateCourse = async (course: Course): Promise<Course> => (await http.put(`/courses/${course._id}`, course)).data;
+export const deleteCourse = async (id: string) => { await http.delete(`/courses/${id}`); };
+export const findModulesForCourse = async (id: string): Promise<CourseModule[]> => (await http.get(`/courses/${id}/modules`)).data;
+export const createModuleForCourse = async (id: string, module: { name: string }): Promise<CourseModule> => (await http.post(`/courses/${id}/modules`, module)).data;
+export const updateModule = async (module: CourseModule): Promise<CourseModule> => (await http.put(`/modules/${module._id}`, module)).data;
+export const deleteModule = async (id: string) => { await http.delete(`/modules/${id}`); };

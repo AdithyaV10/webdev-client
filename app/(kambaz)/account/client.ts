@@ -1,0 +1,11 @@
+import { http } from "../http";
+import type { User } from "./AccountContext";
+const user = (data: User): User => ({ ...data, password: "" });
+export const signin = async (credentials: { username: string; password: string }): Promise<User> => user((await http.post("/users/signin", credentials)).data);
+export const signup = async (value: User): Promise<User> => user((await http.post("/users/signup", value)).data);
+export const profile = async (): Promise<User> => user((await http.get("/users/profile")).data);
+export const signout = async () => { await http.post("/users/signout"); };
+export const findAllUsers = async (): Promise<User[]> => (await http.get<User[]>("/users")).data.map(user);
+export const createUser = async (value: User): Promise<User> => user((await http.post("/users", value)).data);
+export const updateUser = async (value: User): Promise<User> => user((await http.put(`/users/${value._id}`, value)).data);
+export const deleteUser = async (id: string) => { await http.delete(`/users/${id}`); };

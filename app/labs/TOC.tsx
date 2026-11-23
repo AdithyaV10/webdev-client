@@ -33,6 +33,8 @@ export default function TOC() {
       </ul>
       <p>Adithya Varadarajan</p>
       <p><a href="https://github.com/AdithyaV10/webdev-client" id="wd-toc-github-link" target="_blank" rel="noreferrer">GitHub Repository</a></p>
+      {process.env.NEXT_PUBLIC_SERVER_GITHUB_URL ? <p><a id="wd-server-github" href={process.env.NEXT_PUBLIC_SERVER_GITHUB_URL} target="_blank" rel="noreferrer">Server GitHub Repository</a></p> : <p>Server GitHub link pending</p>}
+      {process.env.NEXT_PUBLIC_HTTP_SERVER ? <p><a id="wd-server-link" href={process.env.NEXT_PUBLIC_HTTP_SERVER} target="_blank" rel="noreferrer">HTTP Server</a></p> : <p>Server link pending</p>}
     </div>
   );
 }

@@ -1,17 +1,34 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 
 import { useCoursesStore, type Course } from "../store/coursesStore";
 import { useEnrollmentsStore } from "../store/enrollmentsStore";
 import { useAccountContext } from "../account/AccountContext";
 
-export default function CourseCard({ course, onEdit, image }: { course: Course; onEdit: () => void; image: string | ReactNode }) {
+import * as client from "../courses/client";
+import { errorMessage } from "../http";
+export default function CourseCard({ course, onEdit, onChanged, image }: { course: Course; onEdit: () => void; onChanged: () => void; image: string | ReactNode }) {
   const { _id: id, name: title, description: subtitle } = course;
   const deleteCourse = useCoursesStore(state => state.deleteCourse);
   const { enrollments, enroll, unenroll } = useEnrollmentsStore();
   const { currentUser } = useAccountContext();
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
+  const remove = async () => {
+    setError(""); setPending(true);
+    try { await client.deleteCourse(id); deleteCourse(id); onChanged(); }
+    catch (error) { setError(errorMessage(error)); }
+    finally { setPending(false); }
+  };
+  const changeEnrollment = async () => {
+    if (!currentUser) return;
+    setError(""); setPending(true);
+    try { if (enrolled) await unenroll(currentUser._id, id); else await enroll(currentUser._id, id); onChanged(); }
+    catch (error) { setError(errorMessage(error)); }
+    finally { setPending(false); }
+  };
   const enrolled = !!currentUser && enrollments.some(e => e.user === currentUser._id && e.course === id);
   return (
     <div className="wd-dashboard-course w-[300px] max-w-full overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm">
@@ -39,10 +56,11 @@ export default function CourseCard({ course, onEdit, image }: { course: Course; 
           </span>
         </div>
       </Link>
+      {error && <p role="alert" className="px-4 text-red-600">{error}</p>}
       <div className="flex flex-wrap gap-2 px-4 pb-4">
         <button type="button" id={"wd-edit-course-" + id + "-click"} data-action="edit-course" className="rounded bg-yellow-400 px-3 py-1.5 text-sm" onClick={onEdit}>Edit</button>
-        <button type="button" id={"wd-delete-course-" + id + "-click"} data-action="delete-course" className="rounded bg-red-600 px-3 py-1.5 text-sm text-white" onClick={() => deleteCourse(id)}>Delete</button>
-        {currentUser && <button type="button" className={"rounded px-3 py-1.5 text-sm text-white " + (enrolled ? "bg-red-600" : "bg-green-600")} onClick={() => enrolled ? unenroll(currentUser._id, id) : enroll(currentUser._id, id)}>{enrolled ? "Unenroll" : "Enroll"}</button>}
+        <button type="button" id={"wd-delete-course-" + id + "-click"} data-action="delete-course" className="rounded bg-red-600 px-3 py-1.5 text-sm text-white" disabled={pending} onClick={remove}>Delete</button>
+        {currentUser && <button type="button" className={"rounded px-3 py-1.5 text-sm text-white " + (enrolled ? "bg-red-600" : "bg-green-600")} disabled={pending} onClick={changeEnrollment}>{enrolled ? "Unenroll" : "Enroll"}</button>}
       </div>
     </div>
   );

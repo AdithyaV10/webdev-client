@@ -1,15 +1,17 @@
 "use client";
 import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
-import { useState, type ChangeEvent } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { Field, inputClass, secondaryButton, primaryButton } from "../../../../UI";
 import { useAccountContext } from "../../../../account/AccountContext";
 import { useAssignmentsStore } from "../../../../store/assignmentsStore";
+import * as client from "../../../assignmentsClient";
+import { errorMessage } from "../../../../http";
 export default function Editor({ cid, aid }: { cid: string; aid: string }) {
   const { currentUser } = useAccountContext();
   const canEdit = !currentUser || currentUser.role === "FACULTY" || currentUser.role === "ADMIN";
   const router = useRouter();
-  const { assignments, addAssignment, updateAssignment } = useAssignmentsStore();
+  const { assignments, setAssignments, addAssignment, updateAssignment } = useAssignmentsStore();
   const assignment = assignments.find(a => a._id === aid && a.course === cid);
   const [fields, setFields] = useState<Record<string, string>>(() => assignment ? {
     "wd-name": assignment.title, "wd-description": assignment.description, "wd-points": String(assignment.points),
@@ -22,10 +24,27 @@ export default function Editor({ cid, aid }: { cid: string; aid: string }) {
     const target = event.target;
     setFields(previous => ({ ...previous, [target.name]: target instanceof HTMLInputElement && target.type === "checkbox" ? (target.checked ? "on" : "") : target.value }));
   };
-  if (aid !== "new" && !assignment) notFound();
+  const [pending, setPending] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => {
+    let active = true;
+    client.findAssignmentsForCourse(cid).then(rows => {
+      if (!active) return;
+      setAssignments(rows); setError("");
+      const item = rows.find(a => a._id === aid);
+      if (item) setFields({ "wd-name": item.title, "wd-description": item.description, "wd-points": String(item.points), "wd-due-date": item.due, "wd-available-from": item.available, "wd-available-until": item.until, ...item.fields });
+    }).catch(error => { if (active) setError(errorMessage(error)); })
+      .finally(() => { if (active) setPending(false); });
+    return () => { active = false; };
+  }, [cid, aid, attempt, setAssignments]);
+  if (pending) return <p role="status">Loading assignment...</p>;
+  if (aid !== "new" && !assignment && !error) notFound();
   return <div id="wd-assignments-editor" className="mx-auto max-w-3xl">
     <h2 className="mb-6 text-2xl font-semibold">Assignment Editor</h2>
-    <form onSubmit={e => {
+    {error && <p role="alert" className="text-red-600">{error} <button type="button" onClick={() => { setPending(true); setAttempt(value => value + 1); }}>Retry</button></p>}
+    <form onSubmit={async e => {
       e.preventDefault();
       if (!canEdit) return;
       const submitted = Object.fromEntries(new FormData(e.currentTarget).entries()) as Record<string, string>;
@@ -34,10 +53,15 @@ export default function Editor({ cid, aid }: { cid: string; aid: string }) {
         _id: aid, course: cid, title: submitted["wd-name"], description: submitted["wd-description"], points: Number(submitted["wd-points"]),
         due: submitted["wd-due-date"], available: submitted["wd-available-from"], until: submitted["wd-available-until"], fields: submitted,
       };
-      if (aid === "new") addAssignment(item); else updateAssignment(item);
-      router.push(list);
+      setError(""); setSaving(true);
+      try {
+        if (aid === "new") addAssignment(await client.createAssignmentForCourse(cid, item));
+        else updateAssignment(await client.updateAssignment(item));
+        router.push(list);
+      } catch (error) { setError(errorMessage(error)); }
+      finally { setSaving(false); }
     }}>
-      <fieldset disabled={!canEdit} className="m-0 min-w-0 border-0 p-0">
+      <fieldset disabled={!canEdit || saving} className="m-0 min-w-0 border-0 p-0">
       <Field id="wd-name" label="Assignment Name"><input id="wd-name" name="wd-name" required onChange={change} value={value("wd-name", assignment?.title ?? "")} className={inputClass} /></Field>
       <p className="mb-4 text-sm text-neutral-600">Assignment id: {aid}</p>
       <Field id="wd-description" label="Description"><textarea id="wd-description" name="wd-description" rows={6} onChange={change} value={value("wd-description", "The assignment is available online. Submit a link to the landing page of your Web application running on Vercel.")} className={inputClass} /></Field>
@@ -57,7 +81,7 @@ export default function Editor({ cid, aid }: { cid: string; aid: string }) {
       </fieldset>
       <Field id="wd-ai-editor-notes" label="Sample notes (AI)"><textarea id="wd-ai-editor-notes" name="wd-ai-editor-notes" rows={3} onChange={change} value={value("wd-ai-editor-notes", "")} className={inputClass} /></Field>
       </fieldset>
-      <div className="flex justify-end gap-2 border-t border-neutral-300 pt-4"><Link href={list} id="wd-cancel" className={secondaryButton}>Cancel</Link>{canEdit && <button id="wd-save" type="submit" className={primaryButton}>Save</button>}</div>
+      <div className="flex justify-end gap-2 border-t border-neutral-300 pt-4"><Link href={list} id="wd-cancel" className={secondaryButton}>Cancel</Link>{canEdit && <button id="wd-save" disabled={saving} type="submit" className={primaryButton}>Save</button>}</div>
     </form>
   </div>;
 }

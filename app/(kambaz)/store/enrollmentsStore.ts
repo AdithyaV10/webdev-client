@@ -1,17 +1,23 @@
 "use client";
 import { create } from "zustand";
-import enrollmentsJson from "../database/enrollments.json";
+import * as client from "../courses/enrollmentsClient";
+import type { Enrollment } from "../courses/enrollmentsClient";
 
-type Enrollment = (typeof enrollmentsJson)[number];
 type EnrollmentsStore = {
   enrollments: Enrollment[];
-  enroll: (userId: string, courseId: string) => void;
-  unenroll: (userId: string, courseId: string) => void;
+  loadEnrollments: () => Promise<void>;
+  enroll: (userId: string, courseId: string) => Promise<void>;
+  unenroll: (userId: string, courseId: string) => Promise<void>;
 };
 export const useEnrollmentsStore = create<EnrollmentsStore>((set) => ({
-  enrollments: enrollmentsJson.map(enrollment => ({ ...enrollment })),
-  enroll: (userId, courseId) => set(state => state.enrollments.some(e => e.user === userId && e.course === courseId) ? state : {
-    enrollments: [...state.enrollments, { _id: crypto.randomUUID(), user: userId, course: courseId }],
-  }),
-  unenroll: (userId, courseId) => set(state => ({ enrollments: state.enrollments.filter(e => e.user !== userId || e.course !== courseId) })),
+  enrollments: [],
+  loadEnrollments: async () => set({ enrollments: await client.findAllEnrollments() }),
+  enroll: async (userId, courseId) => {
+    const enrollment = await client.enrollIntoCourse(userId, courseId);
+    set(state => ({ enrollments: [...state.enrollments.filter(e => e.user !== userId || e.course !== courseId), enrollment] }));
+  },
+  unenroll: async (userId, courseId) => {
+    await client.unenrollFromCourse(userId, courseId);
+    set(state => ({ enrollments: state.enrollments.filter(e => e.user !== userId || e.course !== courseId) }));
+  },
 }));
